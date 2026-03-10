@@ -1,1 +1,4 @@
 cryptography
+cairosvg
+Pillow
+pyinstaller

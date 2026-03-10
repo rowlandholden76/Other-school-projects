@@ -1,3 +1,6 @@
 vault.json
 __pycache__/
 .env
+tests/
+scripts/
+password_manager/__pycache__/

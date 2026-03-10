@@ -47,3 +47,18 @@ class PasswordStore:
         token = base64.b64decode(entries[name])
         payload = decrypt_bytes(token, key)
         return json.loads(payload.decode())
+
+    def list_entries(self) -> list:
+        if not self._data:
+            raise RuntimeError("Vault not initialized")
+        return list(self._data.get("entries", {}).keys())
+
+    def delete_entry(self, name: str) -> None:
+        if not self._data:
+            raise RuntimeError("Vault not initialized")
+        entries = self._data.get("entries", {})
+        if name in entries:
+            del entries[name]
+            self._write()
+        else:
+            raise KeyError(f"Entry not found: {name}")

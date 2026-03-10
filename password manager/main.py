@@ -11,6 +11,7 @@ def main():
     sub = parser.add_subparsers(dest="cmd")
 
     sub.add_parser("init")
+    sub.add_parser("gui")
 
     addp = sub.add_parser("add")
     addp.add_argument("--name", required=False)
@@ -65,6 +66,14 @@ def main():
             return
         print("Username:", entry.get("username"))
         print("Password:", entry.get("password"))
+
+    elif args.cmd == "gui":
+        try:
+            from password_manager.gui import run_gui
+
+            run_gui()
+        except Exception as e:
+            print("Error launching GUI:", e)
 
     else:
         parser.print_help()
