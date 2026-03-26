@@ -13,31 +13,31 @@ Quick start
 
 1. Install dependencies:
 
-```
+```powershell
 python -m pip install -r requirements.txt
 ```
 
 2. Initialize the vault (one-time):
 
-```
+```powershell
 python main.py init
 ```
 
 3. Add an entry (CLI):
 
-```
+```powershell
 python main.py add --name example.com --username alice
 ```
 
 4. Retrieve an entry (CLI):
 
-```
+```powershell
 python main.py get example.com
 ```
 
 GUI
 
-```
+```powershell
 python main.py gui
 ```
 
@@ -53,7 +53,7 @@ Packaging and icons
 - Icon assets live in `assets/icons/`. Use `scripts/generate_icons.py` to convert SVGs to PNG/ICO (requires `cairosvg` and `Pillow`).
 - Build a Windows executable with the included helper:
 
-```
+```powershell
 python scripts/generate_icons.py assets/icons/app.svg assets/icons/app.ico
 python scripts/build_exe.py --onefile --windowed
 ```

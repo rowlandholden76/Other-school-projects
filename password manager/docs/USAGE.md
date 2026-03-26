@@ -14,13 +14,17 @@ Commands:
 - `gui` — Launch the Tkinter GUI for managing the vault.
 
 GUI notes:
+
 - Run `python main.py gui` to start the GUI. Unlock with your master password.
 - Use File → Preferences to change the clipboard auto-clear timeout (seconds). Preferences are saved to `config.json` in the project root.
-	- The `clipboard_ms` value in `config.json` may be written as milliseconds (e.g. `30000`) or as a small integer treated as seconds (e.g. `30`). The GUI will accept either format.
 
-Testing clipboard behavior
+  The `clipboard_ms` value in `config.json` may be written as milliseconds (e.g. `30000`) or as a small integer treated as seconds (e.g. `30`). The GUI will accept either format.
+
+- Testing clipboard behavior
+
 - A helper script `scripts/test_clipboard.py` is provided to copy the `UKG` entry (or change the constants at the top of the script) to the clipboard and verify that it is cleared after the configured timeout.
-- Run:
+
+Run:
 
 ```powershell
 python scripts/test_clipboard.py
