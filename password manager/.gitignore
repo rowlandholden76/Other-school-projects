@@ -5,4 +5,4 @@ tests/
 scripts/
 password_manager/__pycache__/
 launch.json
-.gitignore
+
