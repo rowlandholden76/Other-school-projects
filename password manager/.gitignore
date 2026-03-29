@@ -6,3 +6,6 @@ scripts/
 password_manager/__pycache__/
 launch.json
 pyrightconfig.json
+vault.json.bak
+.vscode/
+.pytest_cache/
