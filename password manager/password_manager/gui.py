@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 import ctypes
 from tkinter import messagebox, ttk
+from typing import Optional
 
 # milliseconds before clearing clipboard after copy
 CLIPBOARD_CLEAR_MS = 15_000
@@ -17,7 +18,7 @@ class PasswordManagerGUI:
         self.root.title("Password Manager")
 
         self.store = PasswordStore(path="vault.json")
-        self.master_password = None
+        self.master_password: Optional[str] = None
         self._clipboard_job = None
         # load clipboard timeout from separate config file if available
         try:
@@ -203,7 +204,7 @@ class PasswordManagerGUI:
             if not entry:
                 messagebox.showinfo("Not found", "Entry not found", parent=self.root)
                 return
-            pwd = entry.get("password")
+            pwd = entry.get("password") or ""
             self.root.clipboard_clear()
             self.root.clipboard_append(pwd)
             messagebox.showinfo("Copied", "Password copied to clipboard", parent=self.root)
@@ -304,7 +305,7 @@ def run_gui():
     root.mainloop()
 
 
-def modal_askstring(parent, title, prompt, show=None):
+def modal_askstring(parent, title, prompt, show=None) -> Optional[str]:
     dlg = tk.Toplevel(parent)
     dlg.transient(parent)
     dlg.grab_set()
@@ -317,11 +318,11 @@ def modal_askstring(parent, title, prompt, show=None):
     lbl.pack(side=tk.TOP, anchor=tk.W)
 
     entry_var = tk.StringVar()
-    entry = ttk.Entry(frm, textvariable=entry_var, show=show)
+    entry = ttk.Entry(frm, textvariable=entry_var, show=(show or ""))
     entry.pack(side=tk.TOP, fill=tk.X, expand=True, pady=(5, 10))
     entry.focus_set()
 
-    result = {"value": None}
+    result: dict[str, Optional[str]] = {"value": None}
 
     def on_ok(event=None):
         result["value"] = entry_var.get()
@@ -368,7 +369,7 @@ def modal_askstring(parent, title, prompt, show=None):
     return result["value"]
 
 
-def modal_edit_entry(parent, title, name, username="", password=""):
+def modal_edit_entry(parent, title, name, username: Optional[str] = "", password: Optional[str] = "") -> Optional[dict]:
     dlg = tk.Toplevel(parent)
     dlg.transient(parent)
     dlg.grab_set()
@@ -380,16 +381,16 @@ def modal_edit_entry(parent, title, name, username="", password=""):
     ttk.Label(frm, text=f"Name: {name}").pack(side=tk.TOP, anchor=tk.W)
 
     ttk.Label(frm, text="Username:").pack(side=tk.TOP, anchor=tk.W, pady=(6, 0))
-    user_var = tk.StringVar(value=username)
+    user_var = tk.StringVar(value=username or "")
     user_entry = ttk.Entry(frm, textvariable=user_var)
     user_entry.pack(side=tk.TOP, fill=tk.X, expand=True)
 
     ttk.Label(frm, text="Password:").pack(side=tk.TOP, anchor=tk.W, pady=(6, 0))
-    pwd_var = tk.StringVar(value=password)
+    pwd_var = tk.StringVar(value=password or "")
     pwd_entry = ttk.Entry(frm, textvariable=pwd_var, show='*')
     pwd_entry.pack(side=tk.TOP, fill=tk.X, expand=True)
 
-    result = {"value": None}
+    result: dict[str, Optional[dict]] = {"value": None}
 
     def on_ok(event=None):
         result["value"] = {"username": user_var.get(), "password": pwd_var.get()}
@@ -436,7 +437,7 @@ def modal_edit_entry(parent, title, name, username="", password=""):
     return result["value"]
 
 
-def modal_pref_dialog(parent, current_seconds: int):
+def modal_pref_dialog(parent, current_seconds: int) -> Optional[str]:
     dlg = tk.Toplevel(parent)
     dlg.transient(parent)
     dlg.grab_set()
@@ -451,7 +452,7 @@ def modal_pref_dialog(parent, current_seconds: int):
     sec_entry.pack(side=tk.TOP, fill=tk.X, expand=True, pady=(5, 10))
     sec_entry.focus_set()
 
-    result = {"value": None}
+    result: dict[str, Optional[str]] = {"value": None}
 
     def on_ok(event=None):
         result["value"] = sec_var.get()

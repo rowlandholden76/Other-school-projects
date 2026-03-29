@@ -9,7 +9,7 @@ from .crypto import generate_salt, derive_key, encrypt_bytes, decrypt_bytes
 class PasswordStore:
     def __init__(self, path: str = "vault.json") -> None:
         self.path = path
-        self._data = None
+        self._data: Optional[dict] = None
         if os.path.exists(self.path):
             with open(self.path, "r", encoding="utf-8") as f:
                 self._data = json.load(f)
@@ -26,9 +26,11 @@ class PasswordStore:
         with open(self.path, "w", encoding="utf-8") as f:
             json.dump(self._data, f, indent=2)
 
-    def add_entry(self, name: str, username: str, password: str, master_password: str) -> None:
+    def add_entry(self, name: str, username: str, password: str, master_password: Optional[str]) -> None:
         if not self._data:
             raise RuntimeError("Vault not initialized")
+        if master_password is None:
+            raise ValueError("master_password is required")
         salt = base64.b64decode(self._data["salt"])
         key = derive_key(master_password, salt)
         payload = json.dumps({"username": username, "password": password}).encode()
@@ -36,13 +38,15 @@ class PasswordStore:
         self._data["entries"][name] = base64.b64encode(token).decode()
         self._write()
 
-    def get_entry(self, name: str, master_password: str) -> Optional[dict]:
+    def get_entry(self, name: str, master_password: Optional[str]) -> Optional[dict]:
         if not self._data:
             raise RuntimeError("Vault not initialized")
         entries = self._data.get("entries", {})
         if name not in entries:
             return None
         salt = base64.b64decode(self._data["salt"])
+        if master_password is None:
+            raise ValueError("master_password is required")
         key = derive_key(master_password, salt)
         token = base64.b64decode(entries[name])
         payload = decrypt_bytes(token, key)
